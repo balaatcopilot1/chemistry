@@ -2,7 +2,7 @@ Chapter: The d- and f-Block Elements
 
 1. Given below is an image showing a specific property of transition metals.
 Which property of transition metals is shown in the image?
-
+![Diagram](Questions/images/Revision1-Q01.png)
 - A) Catalytic action
 - B) Formation of alloy
 - C) Coloured complex formation
