@@ -1,7 +1,7 @@
 Chapter: Chemical Kinetics
 
 9. Which plot of ln k vs 1/T is consistent with Arrhenius equation?
-![Diagram](Questions/images/Revision1-Q04.png)
+![Diagram](Questions/images/Revision1-Q09.png)
 - A) (A)
 - B) (B)
 - C) (C)
