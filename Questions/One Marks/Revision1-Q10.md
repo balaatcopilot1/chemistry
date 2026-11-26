@@ -1,7 +1,7 @@
 Chapter: Biomolecules
 
 10. In the Haworth structure of the following carbohydrate, various carbon atoms have been numbered. The anomeric carbon is numbered as
-
+![Diagram](Questions/images/Revision1-Q10.png)
 - A) 1
 - B) 2
 - C) 3
