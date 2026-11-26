@@ -3,7 +3,7 @@
 (file name + 'Chapter:' value of every question)."""
 import json, os, re
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Questions")
-cats = ["One Marks", "Two Marks", "Three Marks", "Five Marks"]
+cats = ["One Marks", "Two Marks", "Three Marks", "Four Marks", "Five Marks"]
 CH = re.compile(r"^[ \t]*(?:\*\*)?Chapter(?:\*\*)?[ \t]*:(?:\*\*)?[ \t]*(.+?)[ \t]*$", re.I | re.M)
 out = {}
 for c in cats:
