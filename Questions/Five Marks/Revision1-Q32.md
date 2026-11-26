@@ -3,11 +3,12 @@ Chapter: Chemical Kinetics
 32. (a) (A) For the hydrolysis of methyl acetate in aqueous solution, the following results were obtained:
 t/s: 0, 30, 60
 [CH₃COOCH₃]/mol L⁻¹: 0.60, 0.30, 0.15
+![Diagram](Questions/images/Revision1-Q32a.png)
 Show that it follows pseudo first order reaction, as the concentration of water remains constant.
 (B) Calculate the average rate of reaction between the time interval 30 to 60 seconds. (Given log 2 = 0.3010, log 4 = 0.6021)
 (OR)
 (b) (A) For a certain chemical reaction variation of ln[R] vs. time (s) plot is given below:
-![Diagram](Questions/images/Revision1-Q32.png)
+![Diagram](Questions/images/Revision1-Q32b.png)
 The diagram shows a plot of ln[R] versus time with a negative slope equal to -k and y-intercept equal to ln[R]₀.
 (i) Predict the order of the given reaction.
 (ii) What does the slope of the line and intercept indicate?
