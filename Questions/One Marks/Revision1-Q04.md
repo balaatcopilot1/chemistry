@@ -8,6 +8,8 @@ Which of the graphs identifies the three amines correctly?
 - C) R
 - D) S
 
+![Diagram](Questions/images/Revision1-Q04.png) The diagram shows four bar graphs (P, Q, R, S) comparing the relative solubilities of primary (J), secondary (K), and tertiary (I) aliphatic amines in water.
+
 ## Answer
 
 **C) R**
