@@ -1,6 +1,6 @@
 # Class 12 Chemistry Practice
 
-Pick a section (One / Two / Three / Four / Five Marks) and practise 10 random questions at a time.
+Pick a section (One / Two / Three / Four / Five Marks), or pick a chapter and then a section, and practise 10 random questions at a time.
 
 ## Adding questions
 Put one `.md` file per question in the matching folder under `Questions/`:
