@@ -2,8 +2,7 @@
 Chapter: Amines
 
 22. Write the structures of A, B and C in the following reactions :
-(a) C₆H₅NH₂ --[(CH₃CO)₂O]--> A --[Br₂ / CH₃COOH]--> B --[H⁺]--> C
-(b) 2-bromo-4-nitrotoluene --[Fe + HCl]--> A --[NaNO₂ + HCl, 273 - 278 K]--> B --[H₃PO₂ + H₂O]--> C
+
 ![Diagram](Questions/images/Set4-Q22.png)
 The diagram shows reaction sequence (a) converting aniline to C via acetylation, bromination, and hydrolysis, and sequence (b) converting 2-bromo-4-nitrotoluene to C via reduction, diazotization, and deamination.
 
