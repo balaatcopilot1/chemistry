@@ -117,6 +117,8 @@ async function home(){
     `<a class="cat sm" href="#/chapter/${encodeURIComponent(k)}"><b>${esc(c.name)}</b><span>${c.n} question${c.n==1?'':'s'}</span></a>`).join(''):'<div class="msg">No questions yet.</div>')+'</div>';
 }
 
+function goChapter(k){const h='#/chapter/'+encodeURIComponent(k);if(location.hash===h)chapterPage(k);else location.hash=h}
+
 // ---- Chapter page: which mark sections have questions for this chapter ----
 async function chapterPage(k){
   await loadManifest();
@@ -191,7 +193,7 @@ async function pull(cat,sel,restart){
 function render(){
   const{cat,sel,qs,i,show,left}=S,q=qs[i],last=i===qs.length-1;
   app.innerHTML=`
-  <div class="bar"><span><a class="back" href="#/">‹ Home</a> &nbsp; <button class="link back" id="bk">Papers and chapters</button></span><span>${cat} · Question ${i+1} of ${qs.length}</span></div>
+  <div class="bar"><span><a class="back" href="#/">‹ Home</a> &nbsp; <button class="link back" id="bk">Papers and chapters</button> &nbsp; <button class="link back" id="sec">All sections of this chapter</button></span><span>${cat} · Question ${i+1} of ${qs.length}</span></div>
   <article class="q"><div><span class="tag">Paper: ${esc(q.paper)}</span><span class="tag">${esc(q.chapter)}</span></div>${md(q.q)}
     <button class="link" id="tog" aria-expanded="${show}">${show?'Hide Answer':'Show Answer'}</button>
     ${show?`<div class="ans">${md(q.a)}</div>`:''}
@@ -203,6 +205,7 @@ function render(){
   </div>
   <p class="bar">${left>0?left+' unseen question'+(left==1?'':'s')+' left in your selection':'No unseen questions left in your selection'}</p>`;
   document.getElementById('bk').onclick=()=>chapters(cat,sel);
+  document.getElementById('sec').onclick=()=>goChapter(key(q.chapter));
   document.getElementById('tog').onclick=()=>{S.show=!S.show;render()};
   document.getElementById('prev').onclick=()=>{S.i--;S.show=false;render();scrollTo(0,0)};
   document.getElementById('next').onclick=()=>{S.i++;S.show=false;render();scrollTo(0,0)};
