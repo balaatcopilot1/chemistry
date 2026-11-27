@@ -2,7 +2,7 @@
 Chapter: Haloalkanes and Haloarenes
 
 21. Draw the structures of major product(s) in each of the following reactions :
-(a) 1-chloro-2,4-dinitrobenzene + (i) NaOH, 368 K (ii) H⁺ → ?
+
 ![Diagram](Questions/images/Set4-Q21.png)
 The diagram shows 1-chloro-2,4-dinitrobenzene reacting with aqueous NaOH at 368 K followed by acidification.
 (b) CH₃CH = C(CH₃)₂ + HBr → ?
