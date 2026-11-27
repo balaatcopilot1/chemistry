@@ -44,11 +44,14 @@ h2{font:700 1.4rem Fraunces,Georgia,serif;margin:8px 0 14px}
 .q.gap{margin-top:16px}
 .note{margin:0 0 6px;color:var(--mute);font-size:.88rem}
 .tag{margin-right:6px}
+h2.sp{margin-top:30px}
+button.cat{font:inherit;text-align:left;width:100%;cursor:pointer}
+.cat.sm b{font-size:1.1rem}
 .msg{padding:30px;text-align:center;color:var(--mute)}
 </style>
 </head>
 <body>
-<header><h1>Class 12 Chemistry Practice</h1><p class="sub">Pick a section, then your papers and chapters. Each set has 10 random questions, shown one at a time.</p></header>
+<header><h1>Class 12 Chemistry Practice</h1><p class="sub">Practise by marks or by chapter. Each set has 10 random questions, shown one at a time.</p></header>
 <main id="app"><div class="msg">Loading…</div></main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script>
@@ -102,20 +105,38 @@ const entries=c=>(manifest[c]||[]).map(e=>typeof e==='string'?{file:e,chapter:'O
 const group=(list,f)=>{const m=new Map();list.forEach(e=>{const k=key(e[f]);if(!m.has(k))m.set(k,{name:e[f],n:0});m.get(k).n++});
   return [...m].sort((a,b)=>a[1].name.localeCompare(b[1].name,undefined,{numeric:true}))};
 
+const allEntries=()=>CATS.flatMap(c=>entries(c).map(e=>({...e,cat:c})));
+
 async function home(){
   await loadManifest();
-  app.innerHTML='<div class="grid">'+CATS.map(c=>{
+  const chs=group(allEntries(),'chapter');
+  app.innerHTML='<h2>Practice by marks</h2><div class="grid">'+CATS.map(c=>{
     const n=entries(c).length;
-    return `<a class="cat" href="#/${encodeURIComponent(c)}"><b>${c}</b><span>${n} question${n==1?'':'s'}</span></a>`}).join('')+'</div>';
+    return `<a class="cat" href="#/${encodeURIComponent(c)}"><b>${c}</b><span>${n} question${n==1?'':'s'}</span></a>`}).join('')+'</div>'+
+    '<h2 class="sp">Practice by chapter</h2><div class="grid">'+(chs.length?chs.map(([k,c])=>
+    `<a class="cat sm" href="#/chapter/${encodeURIComponent(k)}"><b>${esc(c.name)}</b><span>${c.n} question${c.n==1?'':'s'}</span></a>`).join(''):'<div class="msg">No questions yet.</div>')+'</div>';
+}
+
+// ---- Chapter page: which mark sections have questions for this chapter ----
+async function chapterPage(k){
+  await loadManifest();
+  const es=allEntries().filter(e=>key(e.chapter)===k);
+  if(!es.length){app.innerHTML='<p><a class="back" href="#/">‹ Home</a></p><div class="msg">Chapter not found.</div>';return}
+  app.innerHTML=`<p><a class="back" href="#/">‹ Home</a></p><h2>${esc(es[0].chapter)}</h2><p class="note">Choose a section.</p><div class="grid">`+
+    CATS.filter(c=>es.some(e=>e.cat===c)).map(c=>{const n=es.filter(e=>e.cat===c).length;
+      return `<button class="cat" data-c="${c}"><b>${c}</b><span>${n} question${n==1?'':'s'}</span></button>`}).join('')+'</div>';
+  app.querySelectorAll('button.cat').forEach(b=>b.onclick=()=>chapters(b.dataset.c,{chapters:[k],from:k}));
 }
 
 // ---- Paper + chapter selection ----
-async function chapters(cat){
+async function chapters(cat,init){
+  init=init||{};
   await loadManifest();
   const es=entries(cat);
-  if(!es.length){app.innerHTML=`<p><a class="back" href="#/">‹ All sections</a></p><div class="msg">No questions in “${cat}” yet. Add .md files to Questions/${cat}/.</div>`;return}
-  let allP=true,selP=new Set(),allC=true,selC=new Set();
-  app.innerHTML=`<p><a class="back" href="#/">‹ All sections</a></p>
+  if(!es.length){app.innerHTML=`<p><a class="back" href="#/">‹ Home</a></p><div class="msg">No questions in “${cat}” yet. Add .md files to Questions/${cat}/.</div>`;return}
+  let allP=!init.papers,selP=new Set(init.papers||[]),allC=!init.chapters,selC=new Set(init.chapters||[]);
+  const from=init.from||'',fromName=from?((allEntries().find(e=>key(e.chapter)===from)||{}).chapter||''):'';
+  app.innerHTML=`<p><a class="back" href="#/">‹ Home</a>${from?` &nbsp; <a class="back" href="#/chapter/${encodeURIComponent(from)}">‹ ${esc(fromName)}</a>`:''}</p>
   <h2>${cat}: choose papers and chapters</h2>
   <div class="q"><h3>Papers</h3><div id="pl"></div></div>
   <div class="q gap"><h3>Chapters</h3><p class="note">Only chapters found in the selected papers are listed.</p><div id="cl"></div></div>
@@ -123,8 +144,8 @@ async function chapters(cat){
   const pl=document.getElementById('pl'),cl=document.getElementById('cl'),go=document.getElementById('go');
   const inP=e=>allP||selP.has(key(e.paper));
   const sync=()=>{go.disabled=(!allP&&!selP.size)||(!allC&&!selC.size)};
-  pl.innerHTML=`<label class="chk"><input type="checkbox" id="allP" checked><b>All Papers</b><span>${es.length}</span></label><hr>`+
-    group(es,'paper').map(([k,p])=>`<label class="chk"><input type="checkbox" class="pp" value="${esc(k)}">${esc(p.name)}<span>${p.n}</span></label>`).join('');
+  pl.innerHTML=`<label class="chk"><input type="checkbox" id="allP"${allP?' checked':''}><b>All Papers</b><span>${es.length}</span></label><hr>`+
+    group(es,'paper').map(([k,p])=>`<label class="chk"><input type="checkbox" class="pp" value="${esc(k)}"${selP.has(k)?' checked':''}>${esc(p.name)}<span>${p.n}</span></label>`).join('');
   const drawC=()=>{
     const pool=es.filter(inP),cs=group(pool,'chapter');
     selC=new Set([...selC].filter(k=>cs.some(c=>c[0]===k)));
@@ -142,7 +163,7 @@ async function chapters(cat){
     else{t.checked?selC.add(t.value):selC.delete(t.value);if(t.checked){allC=false;document.getElementById('allC').checked=false}}
     sync()};
   drawC();
-  go.onclick=()=>pull(cat,{papers:allP?null:[...selP],chapters:allC?null:[...selC]});
+  go.onclick=()=>pull(cat,{papers:allP?null:[...selP],chapters:allC?null:[...selC],from});
 }
 
 // ---- Pull up to 10 unseen questions matching the selected papers and chapters (null = all) ----
@@ -154,7 +175,7 @@ async function pull(cat,sel,restart){
   const fresh=pool.filter(e=>!u.has(e.file));
   if(!fresh.length){
     app.innerHTML=`<p><button class="link back" id="bk">‹ Papers and chapters</button></p><div class="msg">You have finished all ${pool.length} questions in your selection this session.<br><br><button class="b main" id="again">Start again</button></div>`;
-    document.getElementById('bk').onclick=()=>chapters(cat);
+    document.getElementById('bk').onclick=()=>chapters(cat,sel);
     document.getElementById('again').onclick=()=>pull(cat,sel,true);return}
   const pick=shuffle(fresh).slice(0,SET);
   app.innerHTML='<div class="msg">Loading questions…</div>';
@@ -170,7 +191,7 @@ async function pull(cat,sel,restart){
 function render(){
   const{cat,sel,qs,i,show,left}=S,q=qs[i],last=i===qs.length-1;
   app.innerHTML=`
-  <div class="bar"><span><a class="back" href="#/">‹ All sections</a> &nbsp; <button class="link back" id="bk">Papers and chapters</button></span><span>${cat} · Question ${i+1} of ${qs.length}</span></div>
+  <div class="bar"><span><a class="back" href="#/">‹ Home</a> &nbsp; <button class="link back" id="bk">Papers and chapters</button></span><span>${cat} · Question ${i+1} of ${qs.length}</span></div>
   <article class="q"><div><span class="tag">Paper: ${esc(q.paper)}</span><span class="tag">${esc(q.chapter)}</span></div>${md(q.q)}
     <button class="link" id="tog" aria-expanded="${show}">${show?'Hide Answer':'Show Answer'}</button>
     ${show?`<div class="ans">${md(q.a)}</div>`:''}
@@ -181,7 +202,7 @@ function render(){
     <button class="b" id="more">${left>0?'Pull next 10 questions':'Start again'}</button>
   </div>
   <p class="bar">${left>0?left+' unseen question'+(left==1?'':'s')+' left in your selection':'No unseen questions left in your selection'}</p>`;
-  document.getElementById('bk').onclick=()=>chapters(cat);
+  document.getElementById('bk').onclick=()=>chapters(cat,sel);
   document.getElementById('tog').onclick=()=>{S.show=!S.show;render()};
   document.getElementById('prev').onclick=()=>{S.i--;S.show=false;render();scrollTo(0,0)};
   document.getElementById('next').onclick=()=>{S.i++;S.show=false;render();scrollTo(0,0)};
@@ -189,7 +210,9 @@ function render(){
 }
 
 function route(){
-  const h=decodeURIComponent(location.hash.replace(/^#\/?/,''));
+  const raw=location.hash.replace(/^#\/?/,'');
+  if(raw.startsWith('chapter/'))return chapterPage(decodeURIComponent(raw.slice(8)));
+  const h=decodeURIComponent(raw);
   if(CATS.includes(h))chapters(h);else home();
 }
 addEventListener('hashchange',route);route();
